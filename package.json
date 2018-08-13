@@ -1,0 +1,15 @@
+{
+  "name": "dailyvolume",
+  "version": "1.0.0",
+  "description": "Fetch daily volume for efx trustless",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikola Vukovic (nvukovic@decenter.com)",
+  "license": "ISC",
+  "dependencies": {
+    "0x": "^4.1.4",
+    "web3": "^1.0.0-beta.35"
+  }
+}
