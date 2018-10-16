@@ -1,6 +1,6 @@
 module.exports = {
-  networkId: 3,
-  web3ProviderUrl: "https://ropsten.infura.io/BtvoqcA5JxbDnMC5gHYL",
-  efxExchangeAddress: '0x67799a5e640bc64ca24d3e6813842754e546d7b1',
+  networkId: 1,
+  web3ProviderUrl: "https://mainnet.infura.io/BtvoqcA5JxbDnMC5gHYL",
+  efxExchangeAddress: '0xdcdb42c9a256690bd153a7b409751adfc8dd5851',
   blockPrecision: 1,
 }
