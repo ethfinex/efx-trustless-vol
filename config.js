@@ -1,8 +1,8 @@
-const { post } = require('request-promise')
+const {post} = require('request-promise')
 
 const config = {
   networkId: 1,
-  web3ProviderUrl: "https://mainnet.infura.io/BtvoqcA5JxbDnMC5gHYL",
+  web3ProviderUrl: 'https://mainnet.infura.io/BtvoqcA5JxbDnMC5gHYL',
   configUrl: 'https://api.ethfinex.com/trustless/v1/r/get/conf',
   exchangeAddress: '', // fetched from the API
   tokenRegistry: {}, // fetched from the API

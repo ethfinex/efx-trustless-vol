@@ -1,8 +1,8 @@
-const https = require('https');
+const {get} = require('request-promise')
 const Web3 = require('web3')
-const { ZeroEx } = require('0x.js')
+const {ZeroEx} = require('0x.js')
 const getConfig = require('./config')
-const { wrapperToToken } = require('./tokenData')
+const {wrapperToToken} = require('./tokenData')
 
 const getBlockNumber24hAgo = async (_precision = 1) => {
   const config = await getConfig()
@@ -23,26 +23,8 @@ const getBlockNumber24hAgo = async (_precision = 1) => {
   return blockNumber
 }
 
-const getTokenPrices = (tokens) => 
-  new Promise((resolve, reject) => {
-    https.get('https://api.ethfinex.com/v2/tickers?symbols=' + tokens.join(','), (resp) => {
-      let data = '';
-
-      resp.on('data', (chunk) => {
-        data += chunk;
-      });
-
-      resp.on('end', () => {
-        try {
-          const parsedData = JSON.parse(data);
-          resolve(JSON.parse(data));
-        } catch (e) {
-          reject(e.message);
-        }
-      });
-
-    }).on("error", reject);
-  })
+const getTokenPrices = (tokens) =>
+  get('https://api.ethfinex.com/v2/tickers?symbols=' + tokens.join(','), {json: true})
 
 const getDailyVolume = async () => {
   const config = await getConfig()
@@ -60,7 +42,7 @@ const getDailyVolume = async () => {
   }, {})
 
   const byToken = logs.reduce((collection, log) => {
-    const { makerToken, filledMakerTokenAmount } = log.args
+    const {makerToken, filledMakerTokenAmount} = log.args
     if (collection[makerToken])
       collection[makerToken] = collection[makerToken].plus(filledMakerTokenAmount)
     else

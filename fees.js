@@ -1,7 +1,7 @@
 const Web3 = require('web3')
-const { ZeroEx } = require('0x.js')
+const {ZeroEx} = require('0x.js')
 const getConfig = require('./config')
-const { wrapperToToken } = require('./tokenData')
+const {wrapperToToken} = require('./tokenData')
 const _ = require('lodash')
 
 // To date (11th October)
@@ -24,7 +24,6 @@ const _ = require('lodash')
 // NEC 0.06875
 // (The actual fees are double this) - only 50% currently go to nectar holders
 
-
 const startBlock = 6185294
 const endBlock = 6497244
 
@@ -45,16 +44,16 @@ const get30dTrades = async () => {
   const wrapperToTokenMap = wrapperToToken(config.tokenRegistry)
 
   const byToken = logs.reduce((collection, log) => {
-    const { takerToken, filledTakerTokenAmount } = log.args
+    const {takerToken, filledTakerTokenAmount} = log.args
     const tokenName = wrapperToTokenMap[takerToken]
     if (!tokenName) return
     if (collection[tokenName])
       collection[tokenName] = collection[tokenName].plus(filledTakerTokenAmount.div(2 * 400 * 10 ** config.tokenRegistry[tokenName].decimals))
     else
-      collection[tokenName] = filledTakerTokenAmount.div( 400 * 10 ** config.tokenRegistry[tokenName].decimals)
+      collection[tokenName] = filledTakerTokenAmount.div(400 * 10 ** config.tokenRegistry[tokenName].decimals)
     return collection
   }, {})
-  _.each(byToken, function(value, key) {
+  _.each(byToken, function (value, key) {
     console.log(key, value.toString())
   })
 }

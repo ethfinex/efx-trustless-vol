@@ -1,9 +1,7 @@
-const https = require('https');
 const Web3 = require('web3')
-const { ZeroEx } = require('0x.js')
+const {ZeroEx} = require('0x.js')
 const getConfig = require('./config')
 const _ = require('lodash')
-
 
 const startBlock = 6185294
 const endBlock = 6497244
