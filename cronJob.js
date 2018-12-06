@@ -16,8 +16,8 @@ fs.readFile('credentials.json', (err, content) => {
       console.log('Scheduled CRON job is being run.');
       const volume = await getDailyVolume();
       const date = new Date();
-      date.setDate(date.getDate() - 1);
-      const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      date.setDate(date.getDate());
+      const formattedDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 
       sheetService.writeToSheet(auth, [[formattedDate, volume]]);
       console.log(`CRON job finished, current volume is ${volume}, date ${formattedDate}`);
