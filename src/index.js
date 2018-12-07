@@ -1,4 +1,5 @@
-const {get} = require('request-promise')
+const getTokenPrices = require('./lib/getTokenPrices')
+
 const Web3 = require('web3')
 const {ZeroEx} = require('0x.js')
 const getConfig = require('./config')
@@ -7,11 +8,15 @@ const {wrapperToToken} = require('./tokenData')
 const getBlockNumber24hAgo = async (_precision = 1) => {
   const config = await getConfig()
   const web3 = new Web3(config.web3ProviderUrl)
+
   let blockNumber = await web3.eth.getBlockNumber()
+
   const initialIncrement = 2000
+
   let increment = initialIncrement
   let currentTime = (new Date()).valueOf() / 1000
   let yesterday = currentTime - (24 * 60 * 60)
+
   while (currentTime > yesterday && currentTime - yesterday > 60) {
     blockNumber -= increment
     const block = await web3.eth.getBlock(blockNumber)
@@ -22,9 +27,6 @@ const getBlockNumber24hAgo = async (_precision = 1) => {
   }
   return blockNumber
 }
-
-const getTokenPrices = (tokens) =>
-  get('https://api.ethfinex.com/v2/tickers?symbols=' + tokens.join(','), {json: true})
 
 const getDailyVolume = async () => {
   const config = await getConfig()

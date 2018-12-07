@@ -1,13 +1,17 @@
+<img src="https://avatars3.githubusercontent.com/u/33315316?s=200&v=4" align="right" />
+
 # EFX Trustless Daily Volume
 
-Returns trading volume for past 24h
+  - keeps track of ethfinex trading volume
+  - stores on a mongodb database
+  - provides a json file for external applications to read
 
-## Usage
+## Simple Usage
 
 ```
-const getVolume = require('./index');
-(async function() { 
-  console.log("24h volume: " + await getVolume()); 
+const getVolume = require('./src/index');
+(async function() {
+  console.log("24h volume: " + await getVolume());
 })();
 ```
 
@@ -20,4 +24,9 @@ https://developers.google.com/sheets/api/quickstart/nodejs and put it in the roo
 
 Populate the `sheetConfig.json` file with your sheetId and sheet name.
 
-Run `node cronJob.js`
+Run `node src/cronJob.js`
+
+### You can also deploy your own version to heroku
+
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+

@@ -2,18 +2,21 @@
   "name": "dailyvolume",
   "version": "1.0.0",
   "description": "Fetch daily volume for efx trustless",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node cronJob.js"
+    "start": "node src/web.js"
   },
   "author": "Nikola Vukovic (nvukovic@decenter.com)",
   "license": "ISC",
   "dependencies": {
     "0x.js": "0.38.6",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
     "googleapis": "^27.0.0",
     "node-cron": "^2.0.3",
     "request-promise": "^4.2.2",
     "web3": "1.0.0-beta.35"
+  },
+  "engines": {
+    "node": "10.3.0"
   }
 }
