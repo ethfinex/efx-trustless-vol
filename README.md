@@ -2,9 +2,13 @@
 
 # EFX Trustless Daily Volume
 
-  - keeps track of ethfinex trading volume
-  - stores on a mongodb database
-  - provides a json file for external applications to read
+  - calculates ethfinex trading volume
+  - publishes last daily volume to [last.json](https://stats-sheet.herokuapp.com/last.json)
+
+TODO:
+
+  - stores on a mongodb database and allow better queries
+  - save volume on a per token basis
 
 ## Simple Usage
 

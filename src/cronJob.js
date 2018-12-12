@@ -25,6 +25,18 @@ schedule = () => {
         sheetService.writeToSheet(auth, [[formattedDate, volume]]);
         console.log(`CRON job finished, current volume is ${volume}, date ${formattedDate}`);
 
+        // writes last cron result to public/last.json file
+        entry =  {
+          date: formattedDate,
+          volume: volume
+        }
+
+        json = JSON.stringify(entry, null, 2)
+
+        path = __dirname + '/public/last.json'
+
+        fs.writeFileSync(path, json, 'utf-8')
+
       });
     });
   });
