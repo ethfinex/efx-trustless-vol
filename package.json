@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Fetch daily volume for efx trustless",
   "scripts": {
-    "start": "node src/web.js"
+    "start": "node src/web.js",
+    "test": "mocha ./tests/index.js  --timeout 1200000000",
+    "test:watch": "mocha ./tests/index.js --watch ./  --timeout 1200000000"
   },
   "author": "Nikola Vukovic (nvukovic@decenter.com)",
   "license": "ISC",
@@ -18,5 +20,9 @@
   },
   "engines": {
     "node": "10.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
   }
 }

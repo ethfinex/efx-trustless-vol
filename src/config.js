@@ -10,6 +10,7 @@ const config = {
 
 module.exports = async () => {
   const efxConfig = await post(config.configUrl, {json: {}})
+
   return {
     ...config,
     ...efxConfig['0x'],
