@@ -1,0 +1,8 @@
+{
+  "name": "Ethfinex's trustless volume stats",
+  "description": "Provides json endpoints and general stats from ethfinex",
+  "repository": "https://github.com/ethfinex/efx-trustless-vol",
+  "logo": "https://avatars3.githubusercontent.com/u/33315316?s=200&v=4",
+  "keywords": ["node", "express", "ethfinex", "bitfinex", "trustless", "blockchain", "exchange"],
+  "image": "heroku/nodejs"
+}
