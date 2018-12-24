@@ -39,7 +39,7 @@ describe('~ efx-trustless-vol', async () => {
     assert.ok(block)
   })
 
-  it.only('get yesterday daily volume', async () => {
+  it('get yesterday daily volume', async () => {
     const currentDay = moment().utc().date()
     const currentMonth = moment().utc().month()
     const currentYear = moment().utc().year()
@@ -57,18 +57,7 @@ describe('~ efx-trustless-vol', async () => {
     assert.ok(result.fromBlock)
     assert.ok(result.toBlock)
     assert.ok(result.volume)
+    assert.ok(result.volume.symbols)
   })
 
-  return
-
-  it.only('get daily volume', async () => {
-    const volume = await getDailyVolume()
-
-    console.log( "vol ->", volume)
-
-    // TODO: refactor ./src/index file, break into functions with
-    // better parameters so we can develop other features on this
-    // application
-    assert.ok(volume)
-  })
 })

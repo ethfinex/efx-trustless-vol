@@ -7,7 +7,7 @@ const toDate = require('./timestampToDate')
 /**
  * Find nearest block to given timestamp, expect timestamp in seconds
  */
-module.exports = async (targetTimestamp) => {
+module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
   // target timestamp or last midnight
   targetTimestamp = targetTimestamp || moment.utc().startOf('day').unix()
 
@@ -38,6 +38,27 @@ module.exports = async (targetTimestamp) => {
 
     block = await web3.eth.getBlock(blockNumber)
     requestsMade += 1
+  }
+
+
+  // if we undershoot the day
+  if(lowerLimitStamp && block.timestamp < lowerLimitStamp) {
+    while(block.timestamp < lowerLimitStamp){
+      blockNumber += 1
+
+      block = await web3.eth.getBlock(blockNumber)
+      requestsMade += 1
+    }
+  }
+
+  // if we overshoot the day
+  if(higherLimitStamp && block.timestamp > higherLimitStamp) {
+    while(block.timestamp > higherLimitStamp){
+      blockNumber -= 1
+
+      block = await web3.eth.getBlock(blockNumber)
+      requestsMade += 1
+    }
   }
 
   console.log( "tgt timestamp   ->", targetTimestamp)

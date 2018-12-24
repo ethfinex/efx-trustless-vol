@@ -1,82 +1,95 @@
-const Web3 = require('web3')
 const getConfig = require('../config')
 const blockByTime = require('./getBlockByTime')
 const getTokenPrices = require('./getTokenPrices')
-const {ZeroEx} = require('0x.js')
-const wrapperToToken = require('./wrapperToToken')
+const getDailyCandle = require('./getDailyCandle')
 const toDate = require('./timestampToDate')
 
 module.exports = async (dayTimestamp) => {
 
-  // calculate from and toBlock
-  const fromBlock = await blockByTime(dayTimestamp)
-  const toBlock = await blockByTime(dayTimestamp + 24 * 60 * 60)
-
-  // request logs from zeroEx
+  // fetches basic app config / info
   const config = await getConfig()
-  const web3Provider = new Web3.providers.HttpProvider(config.web3ProviderUrl)
 
-  const zeroEx = new ZeroEx(web3Provider, {
-    networkId: config.networkId,
-    exchangeContractAddress: config.exchangeAddress,
-  })
+  // calculate from and toBlock
+  const fromBlock = await blockByTime(dayTimestamp, dayTimestamp)
+
+  const nextDayTimestamp = dayTimestamp + 24 * 60 * 60
+
+  const toBlock = await blockByTime(nextDayTimestamp, null, nextDayTimestamp)
 
   const range = {
     fromBlock: fromBlock.number,
     toBlock: toBlock.number
   }
 
-  const logs = await zeroEx.exchange.getLogsAsync('LogFill', range, {})
+  // request logs from zeroEx
+  const logs = await config.zeroEx.exchange.getLogsAsync('LogFill', range, {})
 
-  const byToken = logs.reduce((collection, log) => {
+  // sums all filled "amounts" by token
+  const volumeByAddress = logs.reduce((collection, log) => {
     const {makerToken, filledMakerTokenAmount} = log.args
+
     if (collection[makerToken])
       collection[makerToken] = collection[makerToken].plus(filledMakerTokenAmount)
     else
       collection[makerToken] = filledMakerTokenAmount
+
     return collection
   }, {})
 
-  const wrapperToTokenMap = wrapperToToken(config.tokenRegistry)
-
-  const tokens = Object.keys(byToken)
-    .map(token => wrapperToTokenMap[token])
+  // get close price of the daily candle for each token in USD
+  const tokens = Object.keys(volumeByAddress)
+    .map(token => config.tokenMap[token])
     .filter(token => token !== 'USD')
-    .map(token => `t${token}USD`)
 
-  const tokenApiData = await getTokenPrices(tokens)
-  const tokenPrices = tokenApiData.reduce((prices, data) => {
-    const tokenName = data[0].substr(1, 3)
-    const tokenPrice = data[7]
-    prices[tokenName] = tokenPrice
-    return prices
-  }, {})
+  prices = {USD: 1}
 
-  tokenPrices['USD'] = 1
+  for(let token of tokens){
+    const price = await getDailyCandle(`t${token}USD`, dayTimestamp * 1000)
+
+    // get close price of the candle
+    prices[token] = price[0][2]
+  }
 
   let totalVolume = 0
 
-  Object.entries(byToken).forEach(([address, amount]) => {
-    const tokenName = wrapperToTokenMap[address]
-    if (!tokenName) return
-    const tokenAmount = amount.times(10 ** (-1 * config.tokenRegistry[tokenName].decimals))
-    const tokenVolume = tokenPrices[tokenName] * tokenAmount
-    totalVolume += tokenVolume
-  })
+  // total volume of all tokens in USD
+  let volume = {
+    total: 0,
+    symbols: {}
+  }
+  // calculate total by token and also add to the total volume
+  for(var address in volumeByAddress){
+    const symbol = config.tokenMap[address]
+    const decimals = config.tokenRegistry[symbol].decimals
+    const price  = prices[symbol]
+    const amount = volumeByAddress[address].times(10 ** (-1 * decimals)).toNumber()
 
-  const result = {
+    volume.symbols[symbol] = {
+      usdPrice : price,
+      amount : amount,
+      total : price * amount
+    }
+
+    volume.total += volume.symbols[symbol].total
+  }
+
+  return {
+    date: toDate(dayTimestamp),
+
+    timestamp: (dayTimestamp),
+
+    volume: volume,
+
     fromBlock: {
       number: fromBlock.number,
       timestamp: fromBlock.timestamp,
       date: toDate(fromBlock.timestamp)
     },
+
     toBlock: {
       number: toBlock.number,
       timestamp: toBlock.timestamp,
       date: toDate(toBlock.timestamp)
-    },
-    volume: totalVolume
+    }
   }
-
-  return result
 }
