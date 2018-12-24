@@ -3,7 +3,9 @@
 const {assert} = require('chai')
 
 const getConfig = require('../src/config.js')
-const getDailyVolume = require('../src/index')
+const getBlockByTime = require('../src/lib/getBlockByTime')
+const getDailyVolume = require('../src/lib/getDailyVolume')
+const moment = require('moment')
 
 describe('~ efx-trustless-vol', async () => {
 
@@ -17,7 +19,49 @@ describe('~ efx-trustless-vol', async () => {
     // correctly
   })
 
-  it('get block number for 24 hours ago', async () => {
+  it('get block by time', async () => {
+    const currentDay = moment().utc().date()
+    const currentMonth = moment().utc().month()
+    const currentYear = moment().utc().year()
+
+    const startOfToday = moment.utc().startOf('day')
+    const startOfYesterday = moment.utc()
+      .year(currentYear)
+      .month(currentMonth)
+      .date(currentDay-1)
+      .hours(0)
+      .minutes(0)
+      .seconds(0)
+
+    //const block = await getBlockByTime(startOfToday.unix())
+    const block = await getBlockByTime(startOfYesterday.unix())
+
+    assert.ok(block)
+  })
+
+  it.only('get yesterday daily volume', async () => {
+    const currentDay = moment().utc().date()
+    const currentMonth = moment().utc().month()
+    const currentYear = moment().utc().year()
+
+    const startOfYesterday = moment.utc()
+      .year(currentYear)
+      .month(currentMonth)
+      .date(currentDay-1)
+      .hours(0)
+      .minutes(0)
+      .seconds(0)
+
+    const result = await getDailyVolume(startOfYesterday.unix())
+
+    assert.ok(result.fromBlock)
+    assert.ok(result.toBlock)
+    assert.ok(result.volume)
+  })
+
+  return
+
+  it.only('get daily volume', async () => {
     const volume = await getDailyVolume()
 
     console.log( "vol ->", volume)

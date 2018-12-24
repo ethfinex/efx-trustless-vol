@@ -1,37 +1,19 @@
-const getTokenPrices = require('./lib/getTokenPrices')
-
 const Web3 = require('web3')
+const getConfig = require('../config')
+const blockByTime = require('./getBlockByTime')
+const getTokenPrices = require('./getTokenPrices')
 const {ZeroEx} = require('0x.js')
-const getConfig = require('./config')
-const {wrapperToToken} = require('./tokenData')
+const wrapperToToken = require('./wrapperToToken')
+const toDate = require('./timestampToDate')
 
-const getBlockNumber24hAgo = async (_precision = 1) => {
+module.exports = async (dayTimestamp) => {
+
+  // calculate from and toBlock
+  const fromBlock = await blockByTime(dayTimestamp)
+  const toBlock = await blockByTime(dayTimestamp + 24 * 60 * 60)
+
+  // request logs from zeroEx
   const config = await getConfig()
-  const web3 = new Web3(config.web3ProviderUrl)
-
-  let blockNumber = await web3.eth.getBlockNumber()
-
-  const initialIncrement = 2000
-
-  let increment = initialIncrement
-  let currentTime = (new Date()).valueOf() / 1000
-  let yesterday = currentTime - (24 * 60 * 60)
-
-  while (currentTime > yesterday && currentTime - yesterday > 60) {
-    blockNumber -= increment
-    const block = await web3.eth.getBlock(blockNumber)
-    currentTime = block.timestamp
-    increment = Math.ceil((currentTime - yesterday) / (24 * 60 * 60) * initialIncrement)
-    increment = Math.abs(increment)
-    increment = Math.max(increment, _precision)
-  }
-  return blockNumber
-}
-
-const getDailyVolume = async () => {
-  const config = await getConfig()
-  const blockNumber = await getBlockNumber24hAgo()
-
   const web3Provider = new Web3.providers.HttpProvider(config.web3ProviderUrl)
 
   const zeroEx = new ZeroEx(web3Provider, {
@@ -39,10 +21,12 @@ const getDailyVolume = async () => {
     exchangeContractAddress: config.exchangeAddress,
   })
 
-  const logs = await zeroEx.exchange.getLogsAsync('LogFill', {
-    fromBlock: blockNumber,
-    toBlock: 'latest',
-  }, {})
+  const range = {
+    fromBlock: fromBlock.number,
+    toBlock: toBlock.number
+  }
+
+  const logs = await zeroEx.exchange.getLogsAsync('LogFill', range, {})
 
   const byToken = logs.reduce((collection, log) => {
     const {makerToken, filledMakerTokenAmount} = log.args
@@ -80,7 +64,19 @@ const getDailyVolume = async () => {
     totalVolume += tokenVolume
   })
 
-  return totalVolume
-}
+  const result = {
+    fromBlock: {
+      number: fromBlock.number,
+      timestamp: fromBlock.timestamp,
+      date: toDate(fromBlock.timestamp)
+    },
+    toBlock: {
+      number: toBlock.number,
+      timestamp: toBlock.timestamp,
+      date: toDate(toBlock.timestamp)
+    },
+    volume: totalVolume
+  }
 
-module.exports = getDailyVolume
+  return result
+}
