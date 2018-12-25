@@ -14,6 +14,8 @@ TODO:
 
   - allow detailed queries on mongodb
 
+  - keep track of all time high volume
+
 ## Simple Usage
 
 ```
