@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Fetch daily volume for efx trustless",
   "scripts": {
-    "start": "node src/web.js",
+    "start": "node src/index.js",
     "test": "mocha ./tests/index.js  --timeout 1200000000",
     "test:watch": "mocha ./tests/index.js --watch ./  --timeout 1200000000"
   },
@@ -13,7 +13,6 @@
     "0x.js": "0.38.6",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "googleapis": "^27.0.0",
     "moment": "^2.23.0",
     "node-cron": "^2.0.3",
     "request-promise": "^4.2.2",

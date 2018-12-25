@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-
 const {assert} = require('chai')
 
 const getConfig = require('../src/config.js')
