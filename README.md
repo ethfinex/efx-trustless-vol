@@ -8,8 +8,11 @@
 
 TODO:
 
-  - stores on a mongodb database and allow better queries
-  - save volume on a per token basis
+  - store results in mongodb in order to don't lose on every boot
+
+  - automatically fetch volume for the last X days if not yet on the database?
+
+  - allow detailed queries on mongodb
 
 ## Simple Usage
 

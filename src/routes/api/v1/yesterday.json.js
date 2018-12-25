@@ -1,4 +1,5 @@
 const moment = require('moment')
+const cache = require('../../../lib/cache')
 const getDailyVolume = require('../../../lib/getDailyVolume')
 
 module.exports = async (req, res) => {
@@ -14,6 +15,13 @@ module.exports = async (req, res) => {
     .minutes(0)
     .seconds(0)
 
+  const timestamp = startOfYesterday.unix()
+
+  const cached = await cache(
+    'daily-volume:' + timestamp,
+    () => getDailyVolume(timestamp)
+  )
+
   res.setHeader('Content-Type', 'application/json');
-  res.send(await getDailyVolume(startOfYesterday.unix()))
+  res.send(cached)
 }
