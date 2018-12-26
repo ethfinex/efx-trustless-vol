@@ -1,25 +1,40 @@
-// setup webserver
-const express = require('express')
-const path = require('path')
+startup = async () => {
 
-const PORT = process.env.PORT || 5000
+  // connect to mongodb
+  const mongodb = require('./lib/mongodb/connect')
 
-const yesterday = require('./routes/api/v1/yesterday.json')
-const byDate = require('./routes/api/v1/byDate')
+  await mongodb(process.env.MONGODB_URI)
 
-express()
-  .use(express.static(path.join(__dirname, 'public')))
+  // setup webserver
+  const express = require('express')
+  const path = require('path')
 
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
+  const PORT = process.env.PORT || 5000
 
-  .get('/', (req, res) => res.render('pages/index'))
+  const yesterday = require('./routes/api/v1/yesterday.json')
+  const byDate = require('./routes/api/v1/byDate')
 
-  .get('/api/v1/yesterday.json', yesterday )
-  .get('/api/v1/date/:year/:month/:day', byDate )
+  express()
+    .use(express.static(path.join(__dirname, 'public')))
 
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+    .set('views', path.join(__dirname, 'views'))
+    .set('view engine', 'ejs')
 
-// start scheduler
-const scheduler = require('./scheduler.js')
-scheduler()
+    .get('/', (req, res) => res.render('pages/index'))
+
+    .get('/api/v1/yesterday.json', yesterday )
+    .get('/api/v1/date/:year/:month/:day', byDate )
+
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+  // schedules every day job
+  const job = require('./everyDayJob.js')
+  job()
+
+  // cache previous days
+  const cache = require('./cachePreviousDays')
+  cache()
+
+}
+
+startup()

@@ -4,6 +4,7 @@
   "description": "Fetch daily volume for efx trustless",
   "scripts": {
     "start": "node src/index.js",
+    "develop": "env-cmd .env nodemon src/index.js",
     "test": "mocha ./tests/index.js  --timeout 1200000000",
     "test:watch": "mocha ./tests/index.js --watch ./  --timeout 1200000000"
   },
@@ -14,8 +15,10 @@
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "moment": "^2.23.0",
+    "mongodb": "^3.1.10",
     "node-cron": "^2.0.3",
     "request-promise": "^4.2.2",
+    "sleep-promise": "^8.0.1",
     "web3": "1.0.0-beta.35"
   },
   "engines": {
@@ -23,6 +26,8 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "env-cmd": "^8.0.2",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
   }
 }

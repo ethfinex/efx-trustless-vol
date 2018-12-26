@@ -16,25 +16,16 @@ TODO:
 
   - keep track of all time high volume
 
-## Simple Usage
+## Developing
 
-```
-const getVolume = require('./src/index');
-(async function() {
-  console.log("24h volume: " + await getVolume());
-})();
-```
+1. run mongodb locally
 
-## Trustless Volume Sheet usage
+2. `npm run develop`
 
-Run `npm install` or `yarn`.
+## Trustless Volume Spread Sheet
 
-Generate the `credentials.json` file through this url by clicking the `ENABLE THE GOOGLE SHEETS API` button.
-https://developers.google.com/sheets/api/quickstart/nodejs and put it in the root of the project.
-
-Populate the `sheetConfig.json` file with your sheetId and sheet name.
-
-Run `node src/cronJob.js`
+We have a simple spreadsheet displaying basic historical information
+[available here](https://docs.google.com/spreadsheets/d/1gLhHj6tYN2VV6YB7cJEQoyOgKLQJW-zlfUqIeMjuLdE/edit#gid=0)
 
 ### You can also deploy your own version to heroku
 
