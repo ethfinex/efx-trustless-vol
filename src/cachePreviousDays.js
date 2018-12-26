@@ -11,7 +11,8 @@ module.exports = async () => {
   const month = moment().utc().month()
   const year = moment().utc().year()
 
-  const limit = 10// 120 days
+  // TODO: limit to do it until 15th of September 2018
+  const limit = 120// 120 days
 
   for(var offset=1; offset<limit;offset++){
 
