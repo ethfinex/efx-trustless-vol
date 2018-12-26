@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
   const month = Number(req.params.month) - 1
   const year = Number(req.params.year)
 
-  const cached = await cacheVolume(day-1, month, year)
+  const cached = await cacheVolume(day, month, year)
 
   res.setHeader('Content-Type', 'application/json');
   res.send(cached)
