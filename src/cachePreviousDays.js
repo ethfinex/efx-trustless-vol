@@ -11,7 +11,7 @@ module.exports = async () => {
   const month = moment().utc().month()
   const year = moment().utc().year()
 
-  const limit = 10// 120 days
+  const limit = 90// 90 days
 
   for(var offset=1; offset<limit;offset++){
 
