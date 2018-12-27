@@ -13,7 +13,9 @@ module.exports = () => {
       let stats = db.getCollection("stats");
 
       if (stats === null) {
-        stats = db.addCollection("stats");
+        stats = db.addCollection("stats", {
+          indices: ['timestamp']
+        });
       }
 
       resolve(module.exports.db)
