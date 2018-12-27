@@ -3,10 +3,11 @@
 # EFX Trustless Daily Volume
 
   - calculates ethfinex trading volume
-  - publishes last daily volume to [yesterday.json](https://stats-sheet.herokuapp.com/api/v1/yesterday.json)
-  - you can also query by date, i.e. [2018-12-22](https://stats-sheet.herokuapp.com/api/v1/date/2018/12/22)
-  - you can only query for days after 13th of September 2018
-  - you can only query for days that are already completed (yesterday and before)
+  - publishes last daily volume to [/api/v1/yesterday](https://stats-sheet.herokuapp.com/api/v1/yesterday)
+  - you can also query by date, i.e. [/api/v1/date/2018/12/22](https://stats-sheet.herokuapp.com/api/v1/date/2018/12/22)
+    - you can only query for days after 13th of September 2018
+    - you can only query for days that are already completed (yesterday and before)
+  - publishes ATH [/api/v1/ath](https://stats-sheet.herokuapp.com/api/v1/ath)
 
 TODO:
 

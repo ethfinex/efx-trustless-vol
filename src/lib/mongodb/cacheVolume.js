@@ -2,12 +2,11 @@ const moment = require('moment')
 const getDailyVolume = require('../getDailyVolume')
 const cache = require('./cache')
 
-// 13th of September 2018
-const firstDay = moment.utc().year(2018).month(8).date(13)
 
 module.exports = (day, month, year) => {
 
-  // current date
+  // Data range: 13th of September 2018 till yesterday
+  const firstDay = moment.utc().year(2018).month(8).date(13)
   const today = moment.utc().startOf('day')
 
   const date = moment.utc()
