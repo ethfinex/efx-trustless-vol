@@ -3,7 +3,7 @@ const cron = require('node-cron')
 
 const moment = require('moment')
 
-const cacheVolume = require('./lib/mongodb/cacheVolume')
+const cacheVolume = require('./lib/cache/cacheVolume')
 
 module.exports = async () => {
   // every day

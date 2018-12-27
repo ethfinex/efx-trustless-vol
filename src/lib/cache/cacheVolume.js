@@ -1,7 +1,6 @@
 const moment = require('moment')
 const getDailyVolume = require('../getDailyVolume')
-const cache = require('./cache')
-
+const cache = require('../cache/cache')
 
 module.exports = (day, month, year) => {
 

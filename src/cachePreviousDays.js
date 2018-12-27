@@ -1,7 +1,7 @@
 const sleep = require('sleep-promise')
 const cron = require('node-cron')
 const moment = require('moment')
-const cache = require('./lib/mongodb/cacheVolume')
+const cache = require('./lib/cache/cacheVolume')
 
 module.exports = async () => {
   console.log('caching previous days')
@@ -13,8 +13,9 @@ module.exports = async () => {
 
   // TODO: limit to do it until 13th of September 2018
   const firstDay = moment.utc().year(2018).month(8).date(13)
+  const limit = 365 // hard limit just in case
 
-  for(var offset=1; true;offset++){
+  for(var offset=1; offset < limit;offset++){
 
     const date = moment.utc()
       .year(year)

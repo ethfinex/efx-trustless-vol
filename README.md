@@ -25,6 +25,8 @@ TODO:
 
 2. `npm run develop`
 
+Note: you should update .env file with your own INFURA web3 provider address
+
 ## Trustless Volume Spread Sheet
 
 We have a simple spreadsheet displaying basic historical information

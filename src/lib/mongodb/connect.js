@@ -11,9 +11,12 @@ module.exports = (url) => {
     if (module.exports.db) {
       resolve(module.exports.db);
     }
+
     return MongoClient.connect(url, options, function(error, db) {
       if (error) {
         reject(error);
+
+        return
       }
 
       module.exports.db = db.db()

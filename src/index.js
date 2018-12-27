@@ -1,9 +1,12 @@
 startup = async () => {
 
   // connect to mongodb
-  const mongodb = require('./lib/mongodb/connect')
+  // const mongodb = require('./lib/mongodb/connect')
+  // await mongodb(process.env.MONGODB_URI)
 
-  await mongodb(process.env.MONGODB_URI)
+  const loki = require('./lib/loki/connect')
+
+  await loki()
 
   // setup webserver
   const express = require('express')
