@@ -10,17 +10,16 @@
 
 TODO:
 
-  - store results in mongodb in order to don't lose on every boot
-
-  - automatically fetch volume for the last X days if not yet on the database?
-
-  - allow detailed queries on mongodb
+  - allow other queries on mongodb
+    * ATH for total volume
+    * ATH for symbol volume
+    * Ask for full date-range ?
 
   - keep track of all time high volume
 
 ## Developing
 
-1. run mongodb locally
+1. run `mongod` locally on port `27017`
 
 2. `npm run develop`
 
