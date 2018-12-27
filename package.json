@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node src/index.js",
     "develop": "env-cmd .env nodemon src/index.js",
-    "test": "mocha ./tests/index.js  --timeout 1200000000",
-    "test:watch": "mocha ./tests/index.js --watch ./  --timeout 1200000000"
+    "test": "env-cmd .env mocha ./tests/index.js  --timeout 1200000000",
+    "test:watch": "env-cmd .env mocha ./tests/index.js --watch ./  --timeout 1200000000"
   },
   "author": "Nikola Vukovic (nvukovic@decenter.com)",
   "license": "ISC",

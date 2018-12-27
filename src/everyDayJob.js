@@ -16,6 +16,7 @@ module.exports = async () => {
     const month = moment().utc().month()
     const year = moment().utc().year()
 
-    return cacheVolume(day-1, month, year)
+    const doc = await cacheVolume(day-1, month, year)
+
   })
 }

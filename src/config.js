@@ -5,7 +5,7 @@ const wrapperToToken = require('./lib/wrapperToToken')
 
 let config = {
   networkId: 1,
-  web3ProviderUrl: 'https://mainnet.infura.io/BtvoqcA5JxbDnMC5gHYL',
+  web3ProviderUrl: process.env.WEB3_PROVIDER,
   configUrl: 'https://api.ethfinex.com/trustless/v1/r/get/conf',
   tokenMap: {}, // maps tokenAddress to token symbol
   exchangeAddress: '', // fetched from the API

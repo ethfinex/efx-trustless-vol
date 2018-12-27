@@ -11,12 +11,13 @@
 
 TODO:
 
+  - keep track of all time high volume
+
   - allow other queries on mongodb
-    * ATH for total volume
     * ATH for symbol volume
     * Ask for full date-range ?
 
-  - keep track of all time high volume
+  - refactor src/lib folder
 
 ## Developing
 
