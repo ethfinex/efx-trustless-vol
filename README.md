@@ -21,9 +21,7 @@ TODO:
 
 ## Developing
 
-1. run `mongod` locally on port `27017`
-
-2. `npm run develop`
+1. `npm run develop`
 
 Note: you should update .env file with your own INFURA web3 provider address
 
