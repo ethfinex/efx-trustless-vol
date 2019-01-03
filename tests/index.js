@@ -38,6 +38,24 @@ describe('~ efx-trustless-vol', async () => {
     assert.ok(block)
   })
 
+  it('get last block of the day', async () => {
+
+    // date will be 03/01/2019, will find the last block of 02/01/2019
+    const date = moment.utc()
+      .year(2019)
+      .month(0)
+      .date(3)
+      .hours(0)
+      .minutes(0)
+      .seconds(0)
+
+    const block = await getBlockByTime(date.unix(), null, date.unix())
+
+    assert.ok(block)
+    assert.equal(block.number, 7000416)
+    // You can verify the block number is right here: https://etherscan.io/block/7000416
+  })
+
   it('get yesterday daily volume', async () => {
     const currentDay = moment().utc().date()
     const currentMonth = moment().utc().month()

@@ -51,13 +51,39 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
     }
   }
 
-  // if we overshoot the day
-  if(higherLimitStamp && block.timestamp > higherLimitStamp) {
-    while(block.timestamp > higherLimitStamp){
-      blockNumber -= 1
+  if(higherLimitStamp) {
 
-      block = await web3.eth.getBlock(blockNumber)
-      requestsMade += 1
+    // if we ended with a block higher than we can
+    // walk block by block to find the correct one
+    if( block.timestamp >= higherLimitStamp ) {
+      while(block.timestamp >= higherLimitStamp){
+        blockNumber -= 1
+
+        block = await web3.eth.getBlock(blockNumber)
+        requestsMade += 1
+      }
+    }
+
+    // if we ended up with a block lower than the upper limit
+    // walk block by block to make sure it's the correct one
+    if(block.timestamp < higherLimitStamp) {
+      while(block.timestamp < higherLimitStamp){
+        blockNumber += 1
+
+        const tempBlock = await web3.eth.getBlock(blockNumber)
+
+        // can't be equal or higher than upper limit as we want
+        // to find the last block before that limit
+        console.log( "temp ->", tempBlock.timeStamp)
+        console.log("higherLimitStamp ->", higherLimitStamp)
+        if(tempBlock.timestamp >= higherLimitStamp){
+          break
+        }
+
+        block = tempBlock
+
+        requestsMade += 1
+      }
     }
   }
 
