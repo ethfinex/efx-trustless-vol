@@ -73,8 +73,6 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
 
         // can't be equal or higher than upper limit as we want
         // to find the last block before that limit
-        console.log( "temp ->", tempBlock.timeStamp)
-        console.log("higherLimitStamp ->", higherLimitStamp)
         if(tempBlock.timestamp >= higherLimitStamp){
           break
         }
