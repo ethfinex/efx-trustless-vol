@@ -39,9 +39,11 @@ module.exports = async (dayTimestamp) => {
   // get close price of the daily candle for each token in USD
   const tokens = Object.keys(volumeByAddress)
     .map(token => config.tokenMap[token])
-    .filter(token => token !== 'USD')
+    .filter(token => {
+      return ( token !== 'USD' ) && ( token !== 'DAI' )
+    })
 
-  prices = {USD: 1}
+  prices = {USD: 1, DAI: 1}
 
   for(let token of tokens){
     const price = await getDailyCandle(`t${token}USD`, dayTimestamp * 1000)
