@@ -13,16 +13,16 @@ module.exports = async (query, value) => {
 
   let doc = await Stats.findOne(query, options)
 
-  if(doc){
-    // when using loki we don't want to show $loki and meta
-    delete doc['$loki']
-    delete doc.meta
-  }
-
   if(!doc) {
     doc = await value()
 
     Stats.insert(doc)
+  }
+
+  if(doc){
+    // when using loki we don't want to show $loki and meta
+    delete doc['$loki']
+    delete doc.meta
   }
 
   return doc

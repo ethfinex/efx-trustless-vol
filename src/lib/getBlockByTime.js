@@ -17,7 +17,7 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
   // decreasing average block size will decrease precision and also
   // decrease the amount of requests made in order to find the closest
   // block
-  let averageBlockTime = 17
+  let averageBlockTime = 17 * 1.5
 
   // get current block number
   let blockNumber = await web3.eth.getBlockNumber() - 1
@@ -39,7 +39,6 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
     block = await web3.eth.getBlock(blockNumber)
     requestsMade += 1
   }
-
 
   // if we undershoot the day
   if(lowerLimitStamp && block.timestamp < lowerLimitStamp) {
