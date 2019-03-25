@@ -1,5 +1,6 @@
 const Web3 = require('web3')
-const {ZeroEx} = require('0x.js')
+const { ExchangeWrapper } = require('@0x/contract-wrappers')
+const { Web3Wrapper } = require('@0x/web3-wrapper')
 const getConfig = require('./config')
 const _ = require('lodash')
 
@@ -10,12 +11,15 @@ const get30dTrades = async () => {
   const config = await getConfig()
 
   const web3Provider = new Web3.providers.HttpProvider(config.web3ProviderUrl)
-  const zeroEx = new ZeroEx(web3Provider, {
-    networkId: config.networkId,
-    exchangeContractAddress: config.exchangeAddress,
-  })
+  const exchangeWrapper = new ExchangeWrapper(
+    new Web3Wrapper(web3Provider),
+    config.networkId,
+    null,
+    null,
+    config.exchangeAddress,
+  )
 
-  const logs = await zeroEx.exchange.getLogsAsync('LogFill', {
+  const logs = await exchangeWrapper.getLogsAsync('Fill', {
     fromBlock: startBlock,
     toBlock: endBlock,
   }, {})

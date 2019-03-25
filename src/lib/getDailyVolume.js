@@ -3,6 +3,7 @@ const blockByTime = require('./getBlockByTime')
 const getTokenPrices = require('./getTokenPrices')
 const getDailyCandle = require('./getDailyCandle')
 const toDate = require('./timestampToDate')
+const { assetDataUtils } = require('@0x/order-utils')
 
 module.exports = async (dayTimestamp) => {
 
@@ -22,16 +23,21 @@ module.exports = async (dayTimestamp) => {
   }
 
   // request logs from zeroEx
-  const logs = await config.zeroEx.exchange.getLogsAsync('LogFill', range, {})
+  const logs = await config.exchangeWrapper.getLogsAsync(
+    'Fill',
+    range,
+    {feeRecipientAddress: config.ethfinexAddress}
+  )
 
   // sums all filled "amounts" by token
   const volumeByAddress = logs.reduce((collection, log) => {
-    const {makerToken, filledMakerTokenAmount} = log.args
+    const {makerAssetData, makerAssetFilledAmount} = log.args
+    const makerToken = assetDataUtils.decodeERC20AssetData(makerAssetData).tokenAddress
 
     if (collection[makerToken])
-      collection[makerToken] = collection[makerToken].plus(filledMakerTokenAmount)
+      collection[makerToken] = collection[makerToken].plus(makerAssetFilledAmount)
     else
-      collection[makerToken] = filledMakerTokenAmount
+      collection[makerToken] = makerAssetFilledAmount
 
     return collection
   }, {})
@@ -43,7 +49,7 @@ module.exports = async (dayTimestamp) => {
       return ( token !== 'USD' ) && ( token !== 'DAI' )
     })
 
-  prices = {USD: 1, DAI: 1}
+  const prices = {USD: 1, DAI: 1}
 
   for(let token of tokens){
     const price = await getDailyCandle(`t${token}USD`, dayTimestamp * 1000)

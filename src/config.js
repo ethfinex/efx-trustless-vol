@@ -1,5 +1,6 @@
-const {ZeroEx} = require('0x.js')
 const Web3 = require('web3')
+const { ExchangeWrapper } = require('@0x/contract-wrappers')
+const { Web3Wrapper } = require('@0x/web3-wrapper')
 const {post} = require('request-promise')
 const wrapperToToken = require('./lib/wrapperToToken')
 
@@ -33,10 +34,13 @@ module.exports = async (reload = false) => {
 
   const web3Provider = new Web3.providers.HttpProvider(config.web3ProviderUrl)
 
-  config.zeroEx = new ZeroEx(web3Provider, {
-    networkId: config.networkId,
-    exchangeContractAddress: config.exchangeAddress,
-  })
+  config.exchangeWrapper = new ExchangeWrapper(
+    new Web3Wrapper(web3Provider),
+    config.networkId,
+    null,
+    null,
+    config.exchangeAddress,
+  )
 
   return config
 }
