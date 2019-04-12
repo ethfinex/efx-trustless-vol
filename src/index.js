@@ -15,6 +15,7 @@ startup = async () => {
   const PORT = process.env.PORT || 5000
 
   const yesterday = require('./routes/api/v1/yesterday')
+  const last24hours = require('./routes/api/v1/last24hours')
   const ath = require('./routes/api/v1/ath')
   const byDate = require('./routes/api/v1/byDate')
 
@@ -28,6 +29,7 @@ startup = async () => {
 
     .get('/api/v1/ath', ath )
     .get('/api/v1/yesterday', yesterday )
+    .get('/api/v1/last24hours', last24hours )
     .get('/api/v1/date/:year/:month/:day', byDate )
 
     .listen(PORT, () => console.log(`Listening on ${ PORT }`))

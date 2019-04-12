@@ -10,8 +10,12 @@ module.exports = async (dayTimestamp) => {
   // fetches basic app config / info
   const config = await getConfig()
 
+  //console.log( "looking for fromBlock" )
+
   // calculate from and toBlock
   const fromBlock = await blockByTime(dayTimestamp, dayTimestamp)
+
+  //console.log( "fromBlock ->", fromBlock )
 
   const nextDayTimestamp = dayTimestamp + 24 * 60 * 60
 

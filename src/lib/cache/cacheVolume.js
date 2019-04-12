@@ -1,12 +1,9 @@
 const moment = require('moment')
 const getDailyVolume = require('../getDailyVolume')
 const cache = require('../cache/cache')
+const cacheVolumeByTimestamp = require('./cacheVolumeByTimestamp')
 
 module.exports = (day, month, year) => {
-
-  // Data range: 13th of September 2018 till yesterday
-  const firstDay = moment.utc().year(2018).month(8).date(13)
-  const today = moment.utc().startOf('day')
 
   const date = moment.utc()
     .year(year)
@@ -18,15 +15,6 @@ module.exports = (day, month, year) => {
 
   const timestamp = date.unix()
 
-  if(timestamp < firstDay.unix()){
-    return { error: 'date_is_too_early' }
-  }
+  return cacheVolumeByTimestamp(timestamp)
 
-  if(timestamp >= today.unix()){
-    return { error: 'day_must_be_complete' }
-  }
-
-  const query = {timestamp}
-
-  return cache(query, () => getDailyVolume(timestamp))
 }

@@ -20,10 +20,12 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
   let averageBlockTime = 17 * 1.5
 
   // get current block number
-  let blockNumber = await web3.eth.getBlockNumber() - 1
-  let block = await web3.eth.getBlock(blockNumber)
+  const currentBlockNumber = await web3.eth.getBlockNumber()
+  let block = await web3.eth.getBlock(currentBlockNumber)
 
   let requestsMade = 0
+
+  let blockNumber = currentBlockNumber
 
   while(block.timestamp > targetTimestamp){
 
@@ -66,8 +68,11 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
     // if we ended up with a block lower than the upper limit
     // walk block by block to make sure it's the correct one
     if(block.timestamp < higherLimitStamp) {
+
       while(block.timestamp < higherLimitStamp){
         blockNumber += 1
+
+        if(blockNumber > currentBlockNumber) break;
 
         const tempBlock = await web3.eth.getBlock(blockNumber)
 

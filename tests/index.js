@@ -77,4 +77,23 @@ describe('~ efx-trustless-vol', async () => {
     assert.ok(result.volume.symbols)
   })
 
+  it('get last 24 hours volume', async () => {
+
+    const currentDay = moment().utc().date()
+    const currentMonth = moment().utc().month()
+    const currentYear = moment().utc().year()
+
+    const oneDayAgo = moment.utc()
+      .year(currentYear)
+      .month(currentMonth)
+      .date(currentDay-1)
+
+    const result = await getDailyVolume(oneDayAgo.unix())
+
+    assert.ok(result.fromBlock)
+    assert.ok(result.toBlock)
+    assert.ok(result.volume)
+    assert.ok(result.volume.symbols)
+  })
+
 })
