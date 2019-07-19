@@ -19,8 +19,9 @@ module.exports = async (targetTimestamp, lowerLimitStamp, higherLimitStamp) => {
   // block
   let averageBlockTime = 17 * 1.5
 
-  // get current block number
-  const currentBlockNumber = await web3.eth.getBlockNumber()
+  // sometimes getBlock for the current block number return null, so we go
+  // with -1
+  const currentBlockNumber = await web3.eth.getBlockNumber() - 1
   let block = await web3.eth.getBlock(currentBlockNumber)
 
   let requestsMade = 0

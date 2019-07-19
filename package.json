@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node src/index.js",
     "develop": "env-cmd .env nodemon src/index.js --ignore data.json",
+    "local-mongod": "mongod --dbpath ./db",
     "test": "env-cmd .env mocha ./tests/index.js  --timeout 1200000000",
     "test:watch": "env-cmd .env mocha ./tests/index.js --watch ./  --timeout 1200000000"
   },

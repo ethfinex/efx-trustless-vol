@@ -4,6 +4,7 @@ const getTokenPrices = require('./getTokenPrices')
 const getDailyCandle = require('./getDailyCandle')
 const toDate = require('./timestampToDate')
 const { assetDataUtils } = require('@0x/order-utils')
+const moment = require('moment')
 
 module.exports = async (dayTimestamp) => {
 
@@ -26,11 +27,24 @@ module.exports = async (dayTimestamp) => {
     toBlock: toBlock.number
   }
 
+  const updatedZeroXDate = moment.utc().year(2019).month(6).date(17)
+  let feeRecipientAddress = config.ethfinexAddress
+
+  // once we know the correct exchangeWrapper and feeRecipientAddress for
+  // previous dates we will switch it here to calculate previous volume
+  if(dayTimestamp < updatedZeroXDate.unix()){
+
+    //console.log("using old feeRecipientAddress")
+    //feeRecipientAddress = '0x61b9898c9b60a159fc91ae8026563cd226b7a0c1'
+  }
+
+
   // request logs from zeroEx
   const logs = await config.exchangeWrapper.getLogsAsync(
     'Fill',
     range,
-    {feeRecipientAddress: config.ethfinexAddress}
+    //{feeRecipientAddress: config.ethfinexAddress}
+    {feeRecipientAddress: feeRecipientAddress}
   )
 
   // sums all filled "amounts" by token
