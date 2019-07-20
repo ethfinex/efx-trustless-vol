@@ -9,6 +9,7 @@ startup = async () => {
 
   // setup webserver
   const express = require('express')
+  const cors = require('cors')
   const path = require('path')
 
   const PORT = process.env.PORT || 5000
@@ -19,6 +20,8 @@ startup = async () => {
   const byDate = require('./routes/api/v1/byDate')
 
   express()
+    .disable('x-powered-by')
+    .use(cors())
     .use(express.static(path.join(__dirname, 'public')))
 
     .set('views', path.join(__dirname, 'views'))
