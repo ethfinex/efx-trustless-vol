@@ -1,4 +1,4 @@
-const collection = require('../loki/collection')
+const collection = require('../mongodb/collection')
 
 module.exports = async (query, value) => {
 
@@ -16,7 +16,7 @@ module.exports = async (query, value) => {
   if(!doc) {
     doc = await value()
 
-    Stats.insert(doc)
+    Stats.insertOne(doc)
   }
 
   if(doc){

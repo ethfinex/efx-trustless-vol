@@ -1,15 +1,15 @@
 startup = async () => {
 
   // connect to mongodb
-  // const mongodb = require('./lib/mongodb/connect')
-  // await mongodb(process.env.MONGODB_URI)
+   const mongodb = require('./lib/mongodb/connect')
+   await mongodb(process.env.MONGODB_URI)
 
-  const loki = require('./lib/loki/connect')
-
-  await loki()
+  //const loki = require('./lib/loki/connect')
+  //await loki()
 
   // setup webserver
   const express = require('express')
+  const cors = require('cors')
   const path = require('path')
 
   const PORT = process.env.PORT || 5000
@@ -20,6 +20,8 @@ startup = async () => {
   const byDate = require('./routes/api/v1/byDate')
 
   express()
+    .disable('x-powered-by')
+    .use(cors())
     .use(express.static(path.join(__dirname, 'public')))
 
     .set('views', path.join(__dirname, 'views'))
