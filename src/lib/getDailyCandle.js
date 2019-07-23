@@ -6,6 +6,7 @@ module.exports = async (symbol, dayTimestamp) => {
   url = url + '/hist?limit=1&end=' + dayTimestamp
 
   let retries = 0
+  const maxRetries = 100
 
   while(true) {
 
@@ -17,7 +18,7 @@ module.exports = async (symbol, dayTimestamp) => {
       console.log("error getting daily candle for: ", symbol)
       console.log(e)
 
-      if(retries > 2){
+      if(retries > maxRetries){
         throw(e)
       }
     }
@@ -26,7 +27,7 @@ module.exports = async (symbol, dayTimestamp) => {
     console.log("")
 
     retries += 1
-    await sleep(500)
+    await sleep(1000)
   }
 
 }

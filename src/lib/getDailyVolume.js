@@ -27,24 +27,21 @@ module.exports = async (dayTimestamp) => {
     toBlock: toBlock.number
   }
 
-  const updatedZeroXDate = moment.utc().year(2019).month(6).date(17)
-  let feeRecipientAddress = config.ethfinexAddress
+  let exchangeWrapper = config.exchangeWrapper
+  let tokenMap = config.tokenMap
 
-  // once we know the correct exchangeWrapper and feeRecipientAddress for
-  // previous dates we will switch it here to calculate previous volume
-  if(dayTimestamp < updatedZeroXDate.unix()){
+  if(dayTimestamp < config.previousVersionDate.unix()){
 
-    //console.log("using old feeRecipientAddress")
-    //feeRecipientAddress = '0x61b9898c9b60a159fc91ae8026563cd226b7a0c1'
+    console.log("using old exchangeWrapper")
+    exchangeWrapper = config.previousExchangeWrapper
+    tokenMap = config.previousTokenMap
   }
 
-
   // request logs from zeroEx
-  const logs = await config.exchangeWrapper.getLogsAsync(
+  const logs = await exchangeWrapper.getLogsAsync(
     'Fill',
     range,
-    //{feeRecipientAddress: config.ethfinexAddress}
-    {feeRecipientAddress: feeRecipientAddress}
+    {feeRecipientAddress: config.ethfinexAddress}
   )
 
   // sums all filled "amounts" by token
@@ -61,16 +58,26 @@ module.exports = async (dayTimestamp) => {
   }, {})
 
   // get close price of the daily candle for each token in USD
-  const tokens = Object.keys(volumeByAddress)
-    .map(token => config.tokenMap[token])
+  const tokensAddresses = Object.keys(volumeByAddress)
+
+  const tokens = tokensAddresses.map(token => tokenMap[token])
     .filter(token => {
-      return ( token !== 'USD' ) && ( token !== 'DAI' )
+      return ( token !== 'USD' ) && ( token !== 'DAI' ) && ( token !== 'USC' )
     })
 
-  const prices = {USD: 1, DAI: 1}
+  //console.log( "token addresses ->", tokensAddresses )
+  //console.log( "tokens          ->", tokens )
+
+  const prices = {USD: 1, DAI: 1, USC: 1}
 
   for(let token of tokens){
+
     const price = await getDailyCandle(`t${token}USD`, dayTimestamp * 1000)
+
+    if(!price.length){
+      console.log( `price not found for ${token}`)
+      continue
+    }
 
     // get close price of the candle
     prices[token] = price[0][2]
@@ -83,11 +90,24 @@ module.exports = async (dayTimestamp) => {
     total: 0,
     symbols: {}
   }
+
   // calculate total by token and also add to the total volume
   for(var address in volumeByAddress){
-    const symbol = config.tokenMap[address]
+    const symbol = tokenMap[address]
+
+    if(!config.tokenRegistry[symbol]){
+      console.log(`registry not found for ${symbol}, might have been delisted?`)
+      continue
+    }
+
     const decimals = config.tokenRegistry[symbol].decimals
     const price  = prices[symbol]
+
+    if(!price){
+      console.log(`price not found for ${symbol}, might have been delisted?`)
+      continue
+    }
+
     const amount = volumeByAddress[address].times(10 ** (-1 * decimals)).toNumber()
 
     volume.symbols[symbol] = {
